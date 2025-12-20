@@ -187,10 +187,6 @@ The mobile app communicates with this service to deliver contextual, execution-f
 
 > The mobile application consumes the API only and does not contain any AI credentials or internal logic.
 
-
-### Color Customization
-Modify colors in `Utilities/AppColors.swift` to match your brand.
-
 ## 📝 Notes
 
 - The app uses a dark theme throughout

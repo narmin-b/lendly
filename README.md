@@ -168,6 +168,26 @@ The AI Coach feature requires backend API configuration. Update the API endpoint
 private let apiURL = "your-api-endpoint"
 ```
 
+## 🤖 AI Coach Backend
+
+The AI Coach feature is powered by a dedicated backend service deployed on Vercel.  
+The mobile app communicates with this service to deliver contextual, execution-focused guidance.
+
+### Backend
+- **Live API:**  
+  https://chatbot-backend-phi-nine.vercel.app/
+
+- **Source Code:**  
+  https://github.com/AlehsanAliyev/ChatbotBackend
+
+### Integration Summary
+- The iOS app sends user questions and current task context to the backend.
+- All AI processing and credentials are handled server-side.
+- Responses are structured to align with the app’s level and task system.
+
+> The mobile application consumes the API only and does not contain any AI credentials or internal logic.
+
+
 ### Color Customization
 Modify colors in `Utilities/AppColors.swift` to match your brand.
 

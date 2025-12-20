@@ -1,4 +1,5 @@
-# idda
+# lendly
+# by TECHBHOSS
 
 A SwiftUI iOS application designed to help Small and Medium Enterprises (SMEs) improve their business health, access AI-powered coaching, and unlock financial opportunities through gamified task completion.
 

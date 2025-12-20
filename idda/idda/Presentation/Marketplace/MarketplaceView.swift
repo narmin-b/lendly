@@ -605,7 +605,7 @@ struct OfferDetailView: View {
                     // Action Buttons
                     VStack(spacing: DesignSystem.Spacing.md) {
                         Button(action: {
-                            // Accept offer
+                            dismiss()
                         }) {
                             Text("Accept Offer")
                                 .font(DesignSystem.Typography.heading2())
@@ -676,9 +676,9 @@ struct JustificationView: View {
                     .padding(DesignSystem.Spacing.sm)
                     .background(
                         RoundedRectangle(cornerRadius: DesignSystem.BorderRadius.button)
-                            .foregroundStyle(Color.neutralLightGray)
-//                            .fill(Color.neutralLightGray)
+                            .fill(Color.neutralLightGray)
                     )
+                    .scrollContentBackground(.hidden)
                 
                 Spacer()
                 

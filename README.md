@@ -1,209 +1,80 @@
-# lendly
-# by TECHBHOSS
+# Lendly
 
-A SwiftUI iOS application designed to help Small and Medium Enterprises (SMEs) improve their business health, access AI-powered coaching, and unlock financial opportunities through gamified task completion.
+Lendly is an iOS business-health prototype for small and medium-sized businesses. The app combines a learning path, KPI dashboard, sample financing offers, and an AI coach for business-improvement guidance.
 
-## 📱 Overview
+## Tech Stack
 
-idda is a business health management platform that guides SMEs through structured tasks to improve key business metrics. By completing levels and tasks, businesses can increase their trust score, unlock financial offers, and receive personalized AI coaching.
+| Area | Implementation |
+| --- | --- |
+| Platform | iOS 18+; iPhone and iPad |
+| Language | Swift 5 |
+| UI | SwiftUI |
+| UIKit interoperability | `UINavigationBar`, `UITabBar`, `UIImage`, and keyboard dismissal handling |
+| State | SwiftUI `@State`, `@StateObject`, `@ObservedObject`, and Combine `@Published` |
+| Charts | Apple Charts on iOS 16+; custom SwiftUI line-chart fallback |
+| Networking | `URLSession`, `Codable`, JSON, and Swift concurrency (`async`/`await`) |
+| Dependencies | None — only Apple frameworks are used |
 
-## ✨ Features
+## Architecture
 
-### 🗺️ Roadmap View
-- **Level-based progression system** with visual roadmap
-- **Task tracking** with progress indicators
-- **Interactive level bubbles** with detailed task information
-- **Category-based organization** (Growth, Leverage, Operations)
-- **Trust score visualization** with progress tracking
+The codebase is organized into `Models`, `Views`, `ViewModels`, `Presentation`, and `Utilities`. It uses a lightweight MVVM-style approach: `RoadmapViewModel` is an `ObservableObject` that owns roadmap progress, selected-level state, score data, and marketplace-notification state; the remaining screens keep their local UI state in SwiftUI views.
 
-### 🤖 AI Coach
-- **Conversational AI interface** for business advice
-- **SME-focused default questions** for quick guidance
-- **Markdown support** for formatted responses (bold, bold italic)
-- **Real-time chat** with typing indicators
-- **Keyboard dismissal** with "Done" button
+State is in memory only. There is no persistence, authentication, or shared data service.
 
-### 📊 Dashboard
-- **Key Performance Indicators (KPIs)** display
-- **Revenue trend charts** with axis labels
-- **Business category insights** (Liquidity, Growth, Operations)
-- **Trend indicators** (up/down/stable) with visual feedback
+### Navigation
 
-### 🏪 Marketplace
-- **Financial offers** (Working Capital, Equipment Financing, Invoice Factoring, Line of Credit)
-- **Level-gated unlocks** - complete tasks to access better offers
-- **EMI calculator** with real-time updates
-- **Interactive sliders** for amount and duration customization
+`MainTabView` provides four `NavigationView`-based tabs:
 
-## 🛠️ Tech Stack
+- Learning Path
+- Dashboard
+- Offers
+- AI Coach
 
-- **Language**: Swift
-- **Framework**: SwiftUI
-- **Architecture**: MVVM (Model-View-ViewModel)
-- **iOS Version**: iOS 15+
-- **Charts**: Swift Charts (iOS 16+) with fallback for iOS 15
+Task details, offer details, and the contextual coach are presented with SwiftUI sheets.
 
-## 📁 Project Structure
+## API Integration
 
-```
+The AI Coach is the only live backend integration. `CoachAPI` sends a JSON `POST` request via `URLSession` and `async`/`await` to:
+
+`https://chatbot-backend-phi-nine.vercel.app/chat`
+
+The request includes the user message and optional current-quest context; the response is decoded as a JSON object with a `reply` field. The client sends the demo-token header expected by the backend and displays loading or connection-error states in the chat UI.
+
+## Implemented UI Flows
+
+- Learning path with level/task-detail screens and session-only roadmap progress.
+- Dashboard with category filtering, KPI cards, and revenue visualization.
+- Offer browsing with level-gated sample offers, payment estimates, and a request-justification form.
+- AI coach chat backed by the external API.
+
+## Sample Data and Current Scope
+
+Dashboard KPIs and revenue data, marketplace offers/current level, coach quest context, and task definitions are hard-coded sample data. Banking-related wording in task content does not represent a banking integration.
+
+- Task completion is not wired to a full workflow or persistence.
+- Offer applications and request submission are UI-only.
+- Metrics, tasks, and offers have no backend or database integration.
+- The coach requires the external backend to be available.
+
+## Project Structure
+
+```text
 idda/
-├── idda/
-│   ├── iddaApp.swift              # App entry point
-│   ├── ContentView.swift          # Main content view
-│   │
-│   ├── Models/
-│   │   ├── BusinessModels.swift   # Business categories, KPIs, offers, quests
-│   │   └── LevelTasks.swift       # Task definitions and difficulty levels
-│   │
-│   ├── ViewModels/
-│   │   └── RoadmapViewModel.swift # Roadmap state management
-│   │
-│   ├── Views/
-│   │   ├── RoadmapView.swift      # Main roadmap interface
-│   │   └── CoachViewWithQuestion.swift # Coach wrapper with initial question
-│   │
-│   ├── Presentation/
-│   │   ├── MainTabView.swift      # Tab bar navigation
-│   │   ├── Dashboard/
-│   │   │   └── DashboardView.swift
-│   │   ├── Coach/
-│   │   │   └── CoachView.swift    # AI chat interface
-│   │   └── Marketplace/
-│   │       └── MarketplaceView.swift
-│   │
-│   └── Utilities/
-│       ├── AppColors.swift        # Color palette definitions
-│       ├── DesignSystem.swift    # Typography, spacing, border radius
-│       ├── BubbleShape.swift     # Custom bubble shape for tooltips
-│       └── Textures.swift        # Visual texture patterns
-│
-└── idda.xcodeproj/               # Xcode project file
+|-- idda.xcodeproj/              # Xcode project
+`-- idda/
+    |-- iddaApp.swift            # App entry point
+    |-- Models/                  # Data models and sample task definitions
+    |-- ViewModels/              # Observable roadmap state
+    |-- Views/                   # Learning-path and supporting views
+    |-- Presentation/            # Tab, dashboard, offers, and coach screens
+    |-- Utilities/               # Styling and reusable SwiftUI helpers
+    `-- Assets.xcassets/         # App assets
 ```
 
-## 🎨 Design System
+## Run Locally
 
-### Color Palette
-- **Background**: Dark theme (`#1C1D22`)
-- **Card Backgrounds**: `#282930`, `#232528`, `#32363F`
-- **Accent Green**: `#A4EE6F` (primary action color)
-- **Text Colors**: White primary, gray secondary
-- **Accent Colors**: Red (`#FF4444`), Gold (`#FFD700`), Silver (`#C0C0C0`)
+1. Open `idda/idda.xcodeproj` in an Xcode version with the iOS 18 SDK.
+2. Choose the `idda` scheme and an iOS 18+ simulator or device.
+3. Build and run.
 
-### Typography
-- Custom typography system with body, heading, caption styles
-- Consistent font weights and sizes throughout
-
-## 🚀 Getting Started
-
-### Prerequisites
-- Xcode 14.0 or later
-- iOS 15.0+ deployment target
-- macOS 12.0 or later (for development)
-
-### Installation
-
-1. Clone the repository:
-```bash
-git clone <repository-url>
-cd idda
-```
-
-2. Open the project in Xcode:
-```bash
-open idda/idda.xcodeproj
-```
-
-3. Select your target device or simulator
-
-4. Build and run (⌘R)
-
-## 📖 Usage
-
-### Roadmap
-- Navigate through levels by tapping level buttons
-- View task details in interactive bubbles
-- Track progress with visual indicators
-- Complete tasks to unlock new levels and financial offers
-
-### AI Coach
-- Tap ready-made questions for quick guidance
-- Type custom questions in the input field
-- Receive formatted responses with markdown support
-- Use "Done" button to dismiss keyboard
-
-### Dashboard
-- View key business metrics and KPIs
-- Analyze revenue trends with interactive charts
-- Monitor business health across categories
-
-### Marketplace
-- Browse available financial offers
-- Adjust loan amount and duration with sliders
-- View calculated EMI and total payment
-- Unlock premium offers by completing levels
-
-## 🏗️ Architecture
-
-### MVVM Pattern
-- **Models**: Data structures (`BusinessModels`, `LevelTasks`)
-- **Views**: SwiftUI views (`RoadmapView`, `DashboardView`, etc.)
-- **ViewModels**: State management (`RoadmapViewModel`)
-
-### State Management
-- `@State` for local view state
-- `@StateObject` / `@ObservedObject` for shared state
-- `@Published` properties for reactive updates
-
-### Key Components
-- **Custom Shapes**: `BubbleShape` for tooltips
-- **Patterns**: `DiagonalStripePattern`, `DottedPattern`, `MeshGradientBackground`
-- **Charts**: Swift Charts with iOS 15 fallback
-
-## 🔧 Configuration
-
-### API Integration
-The AI Coach feature requires backend API configuration. Update the API endpoint in `CoachView.swift`:
-
-```swift
-private let apiURL = "your-api-endpoint"
-```
-
-## 🤖 AI Coach Backend
-
-The AI Coach feature is powered by a dedicated backend service deployed on Vercel.  
-The mobile app communicates with this service to deliver contextual, execution-focused guidance.
-
-### Backend
-- **Live API:**  
-  https://chatbot-backend-phi-nine.vercel.app/
-
-- **Source Code:**  
-  https://github.com/AlehsanAliyev/ChatbotBackend
-
-### Integration Summary
-- The iOS app sends user questions and current task context to the backend.
-- All AI processing and credentials are handled server-side.
-- Responses are structured to align with the app’s level and task system.
-
-> The mobile application consumes the API only and does not contain any AI credentials or internal logic.
-
-## 📝 Notes
-
-- The app uses a dark theme throughout
-- Level 1 and 2 are pre-completed by default
-- Level 3 is the active level with 30% progress
-- Levels beyond 3 are locked until previous levels are completed
-- Financial offers unlock based on level completion
-
-## 👤 Author
-
-**Narmin Baghirova**
-- Created: December 19, 2025
-
-## 📄 License
-
-This project is proprietary and confidential.
-
----
-
-**Note**: This is an active development project. Features and structure may change.
+For a physical device, select an available Apple Development signing team in the target settings.
